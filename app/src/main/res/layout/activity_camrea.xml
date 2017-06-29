@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chinastis.coolcamera.CameraActivity">
+
+    <SurfaceView
+        android:id="@+id/surfaceView_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <TextView
+        android:id="@+id/capture_camera"
+        android:text="拍照"
+        android:layout_alignParentBottom="true"
+        android:onClick="capture"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="#90000000"
+        android:layout_width="match_parent"
+        android:layout_height="80dp" />
+
+
+</RelativeLayout>
