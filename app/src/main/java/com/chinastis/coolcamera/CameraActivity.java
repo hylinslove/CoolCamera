@@ -2,8 +2,6 @@ package com.chinastis.coolcamera;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 
 public class CameraActivity extends AppCompatActivity implements CameraListener {
@@ -15,9 +13,7 @@ public class CameraActivity extends AppCompatActivity implements CameraListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camrea);
 
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView_camera);
-
-        cameraView = new MyCameraView(this,surfaceView);
+        cameraView = (MyCameraView) findViewById(R.id.surfaceView_camera);
 
         cameraView.initCamera();
 

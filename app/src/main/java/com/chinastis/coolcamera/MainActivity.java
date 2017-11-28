@@ -14,8 +14,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void camera(View view) {
-
         startActivity(new Intent(this,CameraActivity.class));
-
     }
 }

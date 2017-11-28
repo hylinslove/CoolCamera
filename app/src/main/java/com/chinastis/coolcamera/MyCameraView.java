@@ -1,9 +1,8 @@
 package com.chinastis.coolcamera;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
-import android.util.DisplayMetrics;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,9 +15,11 @@ import java.io.IOException;
  * Created by MENG on 2017/6/28.
  */
 
-public class MyCameraView implements SurfaceHolder.Callback ,View.OnTouchListener{
+public class MyCameraView extends SurfaceView implements SurfaceHolder.Callback ,View.OnTouchListener{
 
-    private SurfaceView mSurfaceView;
+    enum FlashMode{
+        ON ,OFF,AUTO
+    }
 
     private SurfaceHolder mHolder;
 
@@ -30,15 +31,29 @@ public class MyCameraView implements SurfaceHolder.Callback ,View.OnTouchListene
 
     private boolean isZooming = false;
 
-    public MyCameraView(Context context,SurfaceView surfaceView ) {
+    public MyCameraView(Context context) {
+        super(context);
 
-        mHolder = surfaceView.getHolder();
-        this.mSurfaceView = surfaceView;
-        this.mSurfaceView.setOnTouchListener(this);
+        mHolder = this.getHolder();
+        setOnTouchListener(this);
         mHolder.addCallback(this);
         mHolder.setKeepScreenOn(true);
 
     }
+
+    public MyCameraView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mHolder = this.getHolder();
+        setOnTouchListener(this);
+        mHolder.addCallback(this);
+        mHolder.setKeepScreenOn(true);
+
+    }
+
+    public MyCameraView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
 
     public void initCamera() {
         mCamera = Camera.open();
@@ -46,6 +61,28 @@ public class MyCameraView implements SurfaceHolder.Callback ,View.OnTouchListene
 
     public void setListener(CameraListener listener) {
         this.listener = listener;
+    }
+
+
+    /**
+     *SurfaceHolder回调
+     */
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+        if(mCamera != null) {
+            try {
+                mCamera.setPreviewDisplay(mHolder);
+                mCamera.setDisplayOrientation(90);
+                mCamera.startPreview();
+            } catch (IOException e) {
+                if(mCamera != null) {
+                    mCamera.release();
+                    mCamera = null;
+                }
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -102,24 +139,25 @@ public class MyCameraView implements SurfaceHolder.Callback ,View.OnTouchListene
     }
 
     /**
-     *SurfaceHolder回调
+     * 设置相机闪光灯模式
+     * @param mode 闪光灯模式
      */
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    public void setFlashMode(FlashMode mode){
+        Camera.Parameters parameters = mCamera.getParameters();
 
-        if(mCamera != null) {
-            try {
-                mCamera.setPreviewDisplay(mHolder);
-                mCamera.setDisplayOrientation(90);
-                mCamera.startPreview();
-            } catch (IOException e) {
-                if(mCamera != null) {
-                    mCamera.release();
-                    mCamera = null;
-                }
-                e.printStackTrace();
-            }
+        switch (mode) {
+            case ON:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                break;
+            case OFF:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                break;
+            case AUTO:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                break;
         }
+        mCamera.setParameters(parameters);
+
     }
 
     @Override
